@@ -8,38 +8,21 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    
     steps:
       - name: 코드 체크아웃
         uses: actions/checkout@v2
 
-      - name: Azure Login
+      - name: Azure 로그인
         uses: azure/login@v1
         with:
           creds: ${{ secrets.DEV_ACR_AZURE_CREDENTIALS }}
 
-      - name: Azure Container Apps에 배포
+      - name: 컨테이너 앱 배포
         uses: azure/container-apps-deploy-action@v2
         with:
-          containerAppName: drev-tesla-proxy
           resourceGroup: testResourceGroup
-          imageToDeploy: tesla/vehicle-command:latest
-
-          # 시크릿 설정
-          secrets: |
-            TESLA_KEY_FILE=${{ secrets.TESLA_KEY_FILE }}
-            TESLA_HTTP_PROXY_TLS_CERT=${{ secrets.TESLA_HTTP_PROXY_TLS_CERT }}
-            TESLA_HTTP_PROXY_TLS_KEY=${{ secrets.TESLA_HTTP_PROXY_TLS_KEY }}
-
-          volumeMounts: |
-            /config=secret:TESLA_KEY_FILE:private_key.pem,secret:TESLA_HTTP_PROXY_TLS_CERT:cert.pem,secret:TESLA_HTTP_PROXY_TLS_KEY:key.pem
-
-          # 환경 변수 설정
-          environmentVariables: >
-            TESLA_HTTP_PROXY_TLS_CERT=/config/cert.pem
-            TESLA_HTTP_PROXY_TLS_KEY=/config/key.pem
-            TESLA_HTTP_PROXY_HOST=0.0.0.0
-            TESLA_HTTP_PROXY_PORT=4443
-            TESLA_HTTP_PROXY_TIMEOUT=10s
-            TESLA_KEY_FILE=/config/private_key.pem
-            TESLA_VERBOSE=true
+          yamlConfigPath: containerapp.yaml
+        env:
+          TESLA_KEY_FILE: ${{ secrets.TESLA_KEY_FILE }}
+          TESLA_HTTP_PROXY_TLS_CERT: ${{ secrets.TESLA_HTTP_PROXY_TLS_CERT }}
+          TESLA_HTTP_PROXY_TLS_KEY: ${{ secrets.TESLA_HTTP_PROXY_TLS_KEY }}
