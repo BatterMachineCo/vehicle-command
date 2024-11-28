@@ -29,7 +29,9 @@ jobs:
         shell: bash
 
       - name: 컨테이너 앱 배포
-        uses: azure/container-apps-deploy-action@v2
-        with:
-          resourceGroup: testResourceGroup
-          yamlConfigPath: container-app.yml
+        run: |
+          az containerapp update \
+            --resource-group testResourceGroup \
+            --name drev-tesla-proxy \
+            --yaml container-app.yml
+        shell: bash
