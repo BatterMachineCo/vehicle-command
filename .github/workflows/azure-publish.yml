@@ -21,7 +21,7 @@ jobs:
         uses: azure/container-apps-deploy-action@v2
         with:
           resourceGroup: testResourceGroup
-          yamlConfigPath: containerapp.yaml
+          yamlConfigPath: container-app.yaml
         env:
           TESLA_KEY_FILE: ${{ secrets.TESLA_KEY_FILE }}
           TESLA_HTTP_PROXY_TLS_CERT: ${{ secrets.TESLA_HTTP_PROXY_TLS_CERT }}
