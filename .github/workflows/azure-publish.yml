@@ -13,23 +13,14 @@ jobs:
       - name: 코드 체크아웃
         uses: actions/checkout@v2
 
-      - name: 키 파일 생성
-        run: |
-          mkdir -p ./config
-          echo "${{ secrets.TESLA_HTTP_PROXY_TLS_CERT }}" > ./config/cert.pem
-          echo "${{ secrets.TESLA_HTTP_PROXY_TLS_KEY }}" > ./config/key.pem
-          echo "${{ secrets.TESLA_KEY_FILE }}" > ./config/private_key.pem
-          ls -al ./config
-        shell: bash
-
       - name: Azure Login
         uses: azure/login@v1
         with:
           creds: ${{ secrets.DEV_ACR_AZURE_CREDENTIALS }}
 
        - name: Azure Container Apps에 배포
-        uses: azure/container-apps-deploy-action@v2
-        with:
+         uses: azure/container-apps-deploy-action@v2
+         with:
           containerAppName: drev-tesla-proxy
           resourceGroup: testResourceGroup
           imageToDeploy: tesla/vehicle-command:latest
@@ -40,8 +31,6 @@ jobs:
             TESLA_HTTP_PROXY_TLS_CERT=${{ secrets.TESLA_HTTP_PROXY_TLS_CERT }}
             TESLA_HTTP_PROXY_TLS_KEY=${{ secrets.TESLA_HTTP_PROXY_TLS_KEY }}
 
-          # 볼륨 마운트 설정
-          revisionSuffix: unique-suffix
           volumeMounts: |
             /config=secret:TESLA_KEY_FILE:private_key.pem,secret:TESLA_HTTP_PROXY_TLS_CERT:cert.pem,secret:TESLA_HTTP_PROXY_TLS_KEY:key.pem
 
