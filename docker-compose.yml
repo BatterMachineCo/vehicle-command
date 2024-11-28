@@ -4,12 +4,12 @@ services:
     ports:
       - "4443:4443"
     environment:
-      - TESLA_HTTP_PROXY_TLS_CERT=/config/tls-cert.pem
-      - TESLA_HTTP_PROXY_TLS_KEY=/config/tls-key.pem
+      - TESLA_HTTP_PROXY_TLS_CERT=/config/cert.pem
+      - TESLA_HTTP_PROXY_TLS_KEY=/config/key.pem
       - TESLA_HTTP_PROXY_HOST=0.0.0.0
       - TESLA_HTTP_PROXY_PORT=4443
       - TESLA_HTTP_PROXY_TIMEOUT=10s
-      - TESLA_KEY_FILE=/config/fleet-key.pem
+      - TESLA_KEY_FILE=/config/private_key.pem
       - TESLA_VERBOSE=true
     volumes:
       - ./config:/config
