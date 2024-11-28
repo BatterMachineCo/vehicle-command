@@ -1,0 +1,53 @@
+# containerapp.yaml
+
+properties:
+  managedEnvironmentId: /subscriptions/9512a4c6-e4a6-49ba-b487-78831b7f114a/resourceGroups/testResourceGroup/providers/Microsoft.App/managedEnvironments/<your-environment-name>
+  configuration:
+    secrets:
+      - name: TESLA_KEY_FILE
+        value: "${{ TESLA_KEY_FILE }}"
+      - name: TESLA_HTTP_PROXY_TLS_CERT
+        value: "${{ TESLA_HTTP_PROXY_TLS_CERT }}"
+      - name: TESLA_HTTP_PROXY_TLS_KEY
+        value: "${{ TESLA_HTTP_PROXY_TLS_KEY }}"
+    ingress:
+      external: true
+      targetPort: 4443
+    activeRevisionsMode: Single
+  template:
+    containers:
+      - name: drev-tesla-proxy
+        image: tesla/vehicle-command:latest
+        env:
+          - name: TESLA_HTTP_PROXY_TLS_CERT
+            value: "/config/cert.pem"
+          - name: TESLA_HTTP_PROXY_TLS_KEY
+            value: "/config/key.pem"
+          - name: TESLA_HTTP_PROXY_HOST
+            value: "0.0.0.0"
+          - name: TESLA_HTTP_PROXY_PORT
+            value: "4443"
+          - name: TESLA_HTTP_PROXY_TIMEOUT
+            value: "10s"
+          - name: TESLA_KEY_FILE
+            value: "/config/private_key.pem"
+          - name: TESLA_VERBOSE
+            value: "true"
+        volumeMounts:
+          - volumeName: config-volume
+            mountPath: /config
+    scale:
+      minReplicas: 1
+      maxReplicas: 3
+    volumes:
+      - name: config-volume
+        secrets:
+          - name: TESLA_KEY_FILE
+            secretName: TESLA_KEY_FILE
+            mountPath: private_key.pem
+          - name: TESLA_HTTP_PROXY_TLS_CERT
+            secretName: TESLA_HTTP_PROXY_TLS_CERT
+            mountPath: cert.pem
+          - name: TESLA_HTTP_PROXY_TLS_KEY
+            secretName: TESLA_HTTP_PROXY_TLS_KEY
+            mountPath: key.pem
