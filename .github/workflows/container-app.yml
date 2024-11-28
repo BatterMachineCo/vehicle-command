@@ -1,7 +1,8 @@
 # containerapp.yaml
 
 properties:
-  managedEnvironmentId: /subscriptions/9512a4c6-e4a6-49ba-b487-78831b7f114a/resourceGroups/testResourceGroup/providers/Microsoft.App/managedEnvironments/<your-environment-name>
+  managedEnvironmentId: /subscriptions/9512a4c6-e4a6-49ba-b487-78831b7f114a/resourceGroups/testResourceGroup/providers/Microsoft.App/managedEnvironments/drev-tesla-proxy
+
   configuration:
     secrets:
       - name: TESLA_KEY_FILE
