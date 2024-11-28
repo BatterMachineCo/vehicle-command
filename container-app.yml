@@ -5,9 +5,9 @@ properties:
 
   configuration:
     secrets:
-      - name: TESLA_KEY_FILE
-      - name: TESLA_HTTP_PROXY_TLS_CERT
-      - name: TESLA_HTTP_PROXY_TLS_KEY
+      - name: tesla-key-file
+      - name: tesla-http-proxy-tls-cert
+      - name: tesla-http-proxy-tls-key
     ingress:
       external: true
       targetPort: 4443

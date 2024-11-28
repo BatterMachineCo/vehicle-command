@@ -23,9 +23,9 @@ jobs:
             --name drev-tesla-proxy \
             --resource-group testResourceGroup \
             --secrets \
-              TESLA_KEY_FILE="${{ secrets.TESLA_KEY_FILE }}" \
-              TESLA_HTTP_PROXY_TLS_CERT="${{ secrets.TESLA_HTTP_PROXY_TLS_CERT }}" \
-              TESLA_HTTP_PROXY_TLS_KEY="${{ secrets.TESLA_HTTP_PROXY_TLS_KEY }}"
+              tesla-key-file="${{ secrets.TESLA_KEY_FILE }}" \
+              tesla-http-proxy-tls-cert="${{ secrets.TESLA_HTTP_PROXY_TLS_CERT }}" \
+              tesla-http-proxy-tls-key="${{ secrets.TESLA_HTTP_PROXY_TLS_KEY }}"
         shell: bash
 
       - name: 컨테이너 앱 배포
