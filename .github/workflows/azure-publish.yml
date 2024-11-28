@@ -17,12 +17,19 @@ jobs:
         with:
           creds: ${{ secrets.DEV_ACR_AZURE_CREDENTIALS }}
 
+      - name: 컨테이너 앱 시크릿 설정
+        run: |
+          az containerapp secret set \
+            --name drev-tesla-proxy \
+            --resource-group testResourceGroup \
+            --secrets \
+              TESLA_KEY_FILE="${{ secrets.TESLA_KEY_FILE }}" \
+              TESLA_HTTP_PROXY_TLS_CERT="${{ secrets.TESLA_HTTP_PROXY_TLS_CERT }}" \
+              TESLA_HTTP_PROXY_TLS_KEY="${{ secrets.TESLA_HTTP_PROXY_TLS_KEY }}"
+        shell: bash
+
       - name: 컨테이너 앱 배포
         uses: azure/container-apps-deploy-action@v2
         with:
           resourceGroup: testResourceGroup
           yamlConfigPath: container-app.yml
-        env:
-          TESLA_KEY_FILE: ${{ secrets.TESLA_KEY_FILE }}
-          TESLA_HTTP_PROXY_TLS_CERT: ${{ secrets.TESLA_HTTP_PROXY_TLS_CERT }}
-          TESLA_HTTP_PROXY_TLS_KEY: ${{ secrets.TESLA_HTTP_PROXY_TLS_KEY }}

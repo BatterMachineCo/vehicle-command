@@ -1,4 +1,4 @@
-# containerapp.yaml
+# container-app.yml
 
 properties:
   managedEnvironmentId: /subscriptions/9512a4c6-e4a6-49ba-b487-78831b7f114a/resourceGroups/testResourceGroup/providers/Microsoft.App/managedEnvironments/drev-tesla-proxy
@@ -6,11 +6,8 @@ properties:
   configuration:
     secrets:
       - name: TESLA_KEY_FILE
-        value: "${{ TESLA_KEY_FILE }}"
       - name: TESLA_HTTP_PROXY_TLS_CERT
-        value: "${{ TESLA_HTTP_PROXY_TLS_CERT }}"
       - name: TESLA_HTTP_PROXY_TLS_KEY
-        value: "${{ TESLA_HTTP_PROXY_TLS_KEY }}"
     ingress:
       external: true
       targetPort: 4443
@@ -42,13 +39,8 @@ properties:
       maxReplicas: 3
     volumes:
       - name: config-volume
+        storageType: Secret
         secrets:
-          - name: TESLA_KEY_FILE
-            secretName: TESLA_KEY_FILE
-            mountPath: private_key.pem
-          - name: TESLA_HTTP_PROXY_TLS_CERT
-            secretName: TESLA_HTTP_PROXY_TLS_CERT
-            mountPath: cert.pem
-          - name: TESLA_HTTP_PROXY_TLS_KEY
-            secretName: TESLA_HTTP_PROXY_TLS_KEY
-            mountPath: key.pem
+          private_key.pem: TESLA_KEY_FILE
+          cert.pem: TESLA_HTTP_PROXY_TLS_CERT
+          key.pem: TESLA_HTTP_PROXY_TLS_KEY
