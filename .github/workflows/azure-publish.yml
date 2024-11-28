@@ -19,6 +19,7 @@ jobs:
           echo "${{ secrets.TESLA_HTTP_PROXY_TLS_CERT }}" > ./config/cert.pem
           echo "${{ secrets.TESLA_HTTP_PROXY_TLS_KEY }}" > ./config/key.pem
           echo "${{ secrets.TESLA_KEY_FILE }}" > ./config/private_key.pem
+          ls -al ./config
         shell: bash
 
       - name: Azure Login
