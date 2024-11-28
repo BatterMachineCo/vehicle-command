@@ -1,5 +1,7 @@
 # container-app.yml
 
+name: drev-tesla-proxy
+location: eastasia
 properties:
   managedEnvironmentId: /subscriptions/9512a4c6-e4a6-49ba-b487-78831b7f114a/resourceGroups/testResourceGroup/providers/Microsoft.App/managedEnvironments/drev-tesla-proxy
 
