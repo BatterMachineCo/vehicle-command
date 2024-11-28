@@ -27,12 +27,25 @@ jobs:
         with:
           creds: ${{ secrets.DEV_ACR_AZURE_CREDENTIALS }}
 
-      - name: Deploy container image to Azure Container Apps
+       - name: Azure Container Apps에 배포
         uses: azure/container-apps-deploy-action@v2
         with:
           containerAppName: drev-tesla-proxy
           resourceGroup: testResourceGroup
           imageToDeploy: tesla/vehicle-command:latest
+
+          # 시크릿 설정
+          secrets: |
+            TESLA_KEY_FILE=${{ secrets.TESLA_KEY_FILE }}
+            TESLA_HTTP_PROXY_TLS_CERT=${{ secrets.TESLA_HTTP_PROXY_TLS_CERT }}
+            TESLA_HTTP_PROXY_TLS_KEY=${{ secrets.TESLA_HTTP_PROXY_TLS_KEY }}
+
+          # 볼륨 마운트 설정
+          revisionSuffix: unique-suffix
+          volumeMounts: |
+            /config=secret:TESLA_KEY_FILE:private_key.pem,secret:TESLA_HTTP_PROXY_TLS_CERT:cert.pem,secret:TESLA_HTTP_PROXY_TLS_KEY:key.pem
+
+          # 환경 변수 설정
           environmentVariables: >
             TESLA_HTTP_PROXY_TLS_CERT=/config/cert.pem
             TESLA_HTTP_PROXY_TLS_KEY=/config/key.pem
