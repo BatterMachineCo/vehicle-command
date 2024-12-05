@@ -51,7 +51,7 @@ properties:
       maxReplicas: 3
     volumes:
       - name: config-volume
-        secrets:
+        secret:
           private_key.pem: tesla-key-file
           cert.pem: tesla-http-proxy-tls-cert
           key.pem: tesla-http-proxy-tls-key
