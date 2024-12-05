@@ -20,6 +20,14 @@ properties:
     containers:
       - name: drev-tesla-proxy
         image: tesla/vehicle-command:latest
+        command:
+          - /bin/sh
+          - -c
+          - |
+            echo "Listing /config directory:"
+            ls -la /config
+            echo "Starting application..."
+            exec vehicle-command --start-proxy
         env:
           - name: TESLA_HTTP_PROXY_TLS_CERT
             value: "/config/cert.pem"
@@ -43,8 +51,7 @@ properties:
       maxReplicas: 3
     volumes:
       - name: config-volume
-        storageType: Secret
         secrets:
-          private_key.pem: TESLA_KEY_FILE
-          cert.pem: TESLA_HTTP_PROXY_TLS_CERT
-          key.pem: TESLA_HTTP_PROXY_TLS_KEY
+          private_key.pem: tesla-key-file
+          cert.pem: tesla-http-proxy-tls-cert
+          key.pem: tesla-http-proxy-tls-key
