@@ -10,8 +10,13 @@ properties:
   configuration:
     secrets:
       - name: tesla-key-file
+        value: "${{ secrets.TESLA_KEY_FILE }}"
       - name: tesla-http-proxy-tls-cert
+        value: "${{ secrets.TESLA_HTTP_PROXY_TLS_CERT }}"
       - name: tesla-http-proxy-tls-key
+        value: "${{ secrets.TESLA_HTTP_PROXY_TLS_KEY }}"
+      - name: mytestacr0613azurecrio-mytestacr0613
+        value: "${{ secrets.ACR_PASSWORD }}"
     ingress:
       external: true
       targetPort: 4443
@@ -46,6 +51,10 @@ properties:
         volumeMounts:
           - volumeName: config-volume
             mountPath: /config
+    registries:
+      - server: mytestacr0613.azurecr.io
+        username: "${{ secrets.ACR_USERNAME }}"
+        passwordSecretRef: mytestacr0613azurecrio-mytestacr0613
     scale:
       minReplicas: 1
       maxReplicas: 3
