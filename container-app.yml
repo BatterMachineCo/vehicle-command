@@ -32,7 +32,6 @@ properties:
             echo "Listing /config directory:"
             ls -la /config
             echo "Starting application..."
-            exec vehicle-command --start-proxy
         env:
           - name: TESLA_HTTP_PROXY_TLS_CERT
             value: "/config/cert.pem"
