@@ -6,17 +6,7 @@ resourceGroup: testResourceGroup
 location: eastasia
 properties:
   managedEnvironmentId: /subscriptions/9512a4c6-e4a6-49ba-b487-78831b7f114a/resourceGroups/testResourceGroup/providers/Microsoft.App/managedEnvironments/drev-tesla-proxy
-
-  configuration:
-    secrets:
-      - name: tesla-key-file
-        value: "${{ secrets.TESLA_KEY_FILE }}"
-      - name: tesla-http-proxy-tls-cert
-        value: "${{ secrets.TESLA_HTTP_PROXY_TLS_CERT }}"
-      - name: tesla-http-proxy-tls-key
-        value: "${{ secrets.TESLA_HTTP_PROXY_TLS_KEY }}"
-      - name: mytestacr0613azurecrio-mytestacr0613
-        value: "${{ secrets.ACR_PASSWORD }}"
+  
     ingress:
       external: true
       targetPort: 4443
@@ -32,6 +22,7 @@ properties:
             echo "Listing /config directory:"
             ls -la /config
             echo "Starting application..."
+            exec vehicle-command --start-proxy
         env:
           - name: TESLA_HTTP_PROXY_TLS_CERT
             value: "/config/cert.pem"
