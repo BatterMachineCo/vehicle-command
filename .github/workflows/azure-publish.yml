@@ -16,16 +16,16 @@ jobs:
         uses: azure/login@v1
         with:
           creds: ${{ secrets.DEV_ACR_AZURE_CREDENTIALS }}
-      
+
       # 3. ACR 로그인
       - name: ACR Login
-        run: az acr login --name ${{ secrets.ACR_NAME }}
+        run: az acr login --name ${{ secrets.DEV_ACR_NAME }}
 
       # 4. Docker 빌드 및 푸시
       - name: Build and Push Docker Image
         run: |
-          docker build -t ${{ secrets.ACR_NAME }}.azurecr.io/tesla-vehicle-command-proxy:latest .
-          docker push ${{ secrets.ACR_NAME }}.azurecr.io/tesla-vehicle-command-proxy:latest
+          docker build -t ${{ secrets.DEV_ACR_NAME }}.azurecr.io/tesla-vehicle-command-proxy:latest .
+          docker push ${{ secrets.DEV_ACR_NAME }}.azurecr.io/tesla-vehicle-command-proxy:latest
 
       - name: 컨테이너 앱 배포
         run: |
