@@ -6,40 +6,21 @@ on:
       - main
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
-    steps:
-      - name: 코드 체크아웃
-        uses: actions/checkout@v2
 
-      - name: Azure 로그인
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Log in to Azure
         uses: azure/login@v1
         with:
-          creds: ${{ secrets.DEV_ACR_AZURE_CREDENTIALS }}
+          creds: ${{ secrets.DEV_AZURE_CREDENTIALS }}
 
-      # 3. ACR 로그인
-      - name: ACR Login
-        run: az acr login --name ${{ secrets.DEV_ACR_NAME }}
-
-      # 4. Docker 빌드 및 푸시
-      - name: Build and Push Docker Image
-        run: |
-          docker build -t ${{ secrets.DEV_ACR_NAME }}.azurecr.io/tesla-vehicle-command-proxy:latest .
-          docker push ${{ secrets.DEV_ACR_NAME }}.azurecr.io/tesla-vehicle-command-proxy:latest
-      
-      - name: Configure Container App Registry
-        run: |
-          az containerapp registry set \
-            --resource-group testResourceGroup \
-            --name tesla-vehicle-command-proxy \
-            --server ${{ secrets.DEV_ACR_NAME }}.azurecr.io \
-            --username ${{ secrets.DEV_ACR_USERNAME }} \
-            --password ${{ secrets.DEV_ACR_PASSWORD }}
-
-      - name: 컨테이너 앱 배포
-        run: |
-          az containerapp update \
-            --resource-group testResourceGroup \
-            --name tesla-vehicle-command-proxy \
-            --yaml container-app.yml
-        shell: bash
+      - name: Build and deploy Container App
+        uses: azure/container-apps-deploy-action@v1
+        with:
+          appSourcePath: ${{ github.workspace }}
+          acrName: mytestacr0613
+          containerAppName: tesla-vehicle-command-proxy
+          resourceGroup: testResoureGroup
