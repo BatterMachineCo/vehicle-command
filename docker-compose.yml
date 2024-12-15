@@ -1,15 +1,13 @@
 services:
   tesla_http_proxy:
-    image: tesla/vehicle-command:latest
+    build: .
     ports:
-      - "4443:4443"
+      - "80:80"
     environment:
-      - TESLA_HTTP_PROXY_TLS_CERT=/config/cert.pem
-      - TESLA_HTTP_PROXY_TLS_KEY=/config/key.pem
       - TESLA_HTTP_PROXY_HOST=0.0.0.0
-      - TESLA_HTTP_PROXY_PORT=4443
+      - TESLA_HTTP_PROXY_PORT=80
       - TESLA_HTTP_PROXY_TIMEOUT=10s
-      - TESLA_KEY_FILE=/config/private_key.pem
+      - TESLA_KEY_FILE=/config/private_key
       - TESLA_VERBOSE=true
     volumes:
       - ./config:/config

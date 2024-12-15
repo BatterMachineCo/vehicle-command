@@ -18,8 +18,6 @@ func assertEquals(t *testing.T, expected, actual interface{}, message string) {
 }
 
 func TestParseConfig(t *testing.T) {
-	origCert := os.Getenv(EnvTLSCert)
-	origKey := os.Getenv(EnvTLSKey)
 	origHost := os.Getenv(EnvHost)
 	origPort := os.Getenv(EnvPort)
 	origVerbose := os.Getenv(EnvVerbose)
@@ -28,8 +26,6 @@ func TestParseConfig(t *testing.T) {
 	os.Args = []string{"cmd"}
 
 	defer func() {
-		os.Setenv(EnvTLSCert, origCert)
-		os.Setenv(EnvTLSKey, origKey)
 		os.Setenv(EnvHost, origHost)
 		os.Setenv(EnvPort, origPort)
 		os.Setenv(EnvVerbose, origVerbose)
@@ -45,14 +41,10 @@ func TestParseConfig(t *testing.T) {
 		assertEquals(t, "localhost", httpConfig.host, "host")
 		assertEquals(t, defaultPort, httpConfig.port, "port")
 		assertEquals(t, proxy.DefaultTimeout, httpConfig.timeout, "timeout")
-		assertEquals(t, "", httpConfig.certFilename, "certFilename")
-		assertEquals(t, "", httpConfig.keyFilename, "keyFilename")
 		assertEquals(t, false, httpConfig.verbose, "verbose")
 	})
 
 	t.Run("environment variables", func(t *testing.T) {
-		os.Setenv(EnvTLSCert, "/env/cert.pem")
-		os.Setenv(EnvTLSKey, "/env/key.pem")
 		os.Setenv(EnvHost, "envhost")
 		os.Setenv(EnvPort, "8443")
 		os.Setenv(EnvVerbose, "true")
@@ -62,8 +54,6 @@ func TestParseConfig(t *testing.T) {
 		if err != nil {
 			t.Fatalf("Unexpected error: %v", err)
 		}
-		assertEquals(t, "/env/cert.pem", httpConfig.certFilename, "certFilename")
-		assertEquals(t, "/env/key.pem", httpConfig.keyFilename, "keyFilename")
 		assertEquals(t, "envhost", httpConfig.host, "host")
 		assertEquals(t, 8443, httpConfig.port, "port")
 		assertEquals(t, 30*time.Second, httpConfig.timeout, "timeout")
@@ -71,16 +61,13 @@ func TestParseConfig(t *testing.T) {
 	})
 
 	t.Run("flags override environment variables", func(t *testing.T) {
-		os.Args = []string{"cmd", "-cert", "/flag/cert.pem", "-tls-key", "/flag/key.pem", "-host", "flaghost", "-port", "9090", "-timeout", "60s"}
+		os.Args = []string{"cmd", "-host", "flaghost", "-port", "9090", "-timeout", "60s"}
 
 		flag.Parse()
 		err := readFromEnvironment()
 		if err != nil {
 			t.Fatalf("Unexpected error: %v", err)
 		}
-
-		assertEquals(t, "/flag/cert.pem", httpConfig.certFilename, "certFilename")
-		assertEquals(t, "/flag/key.pem", httpConfig.keyFilename, "keyFilename")
 		assertEquals(t, "flaghost", httpConfig.host, "host")
 		assertEquals(t, 9090, httpConfig.port, "port")
 		assertEquals(t, 60*time.Second, httpConfig.timeout, "timeout")

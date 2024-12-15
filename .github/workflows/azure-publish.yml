@@ -16,22 +16,21 @@ jobs:
         uses: azure/login@v1
         with:
           creds: ${{ secrets.DEV_ACR_AZURE_CREDENTIALS }}
+      
+      # 3. ACR 로그인
+      - name: ACR Login
+        run: az acr login --name ${{ secrets.ACR_NAME }}
 
-      - name: 컨테이너 앱 시크릿 설정
+      # 4. Docker 빌드 및 푸시
+      - name: Build and Push Docker Image
         run: |
-          az containerapp secret set \
-            --name drev-tesla-proxy \
-            --resource-group testResourceGroup \
-            --secrets \
-              tesla-key-file="${{ secrets.TESLA_KEY_FILE }}" \
-              tesla-http-proxy-tls-cert="${{ secrets.TESLA_HTTP_PROXY_TLS_CERT }}" \
-              tesla-http-proxy-tls-key="${{ secrets.TESLA_HTTP_PROXY_TLS_KEY }}"
-        shell: bash
+          docker build -t ${{ secrets.ACR_NAME }}.azurecr.io/tesla-vehicle-command-proxy:latest .
+          docker push ${{ secrets.ACR_NAME }}.azurecr.io/tesla-vehicle-command-proxy:latest
 
       - name: 컨테이너 앱 배포
         run: |
           az containerapp update \
             --resource-group testResourceGroup \
-            --name drev-tesla-proxy \
+            --name tesla-vehicle-command-proxy \
             --yaml container-app.yml
         shell: bash
