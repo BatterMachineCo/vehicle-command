@@ -26,6 +26,15 @@ jobs:
         run: |
           docker build -t ${{ secrets.DEV_ACR_NAME }}.azurecr.io/tesla-vehicle-command-proxy:latest .
           docker push ${{ secrets.DEV_ACR_NAME }}.azurecr.io/tesla-vehicle-command-proxy:latest
+      
+      - name: Configure Container App Registry
+        run: |
+          az containerapp registry set \
+            --resource-group testResourceGroup \
+            --name tesla-vehicle-command-proxy \
+            --server ${{ secrets.DEV_ACR_NAME }}.azurecr.io \
+            --username ${{ secrets.DEV_ACR_USERNAME }} \
+            --password ${{ secrets.DEV_ACR_PASSWORD }}
 
       - name: 컨테이너 앱 배포
         run: |
