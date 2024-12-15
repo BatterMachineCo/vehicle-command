@@ -1,57 +1,48 @@
-# container-app.yml
-
-name: drev-tesla-proxy
-type: Microsoft.App/containerApps
-resourceGroup: testResourceGroup 
-location: eastasia
+id: /subscriptions/9512a4c6-e4a6-49ba-b487-78831b7f114a/resourceGroups/testResourceGroup/providers/Microsoft.App/containerapps/tesla-vehicle-command-proxy
+identity:
+  type: None
+location: Korea Central
+name: tesla-vehicle-command-proxy
 properties:
-  managedEnvironmentId: /subscriptions/9512a4c6-e4a6-49ba-b487-78831b7f114a/resourceGroups/testResourceGroup/providers/Microsoft.App/managedEnvironments/drev-tesla-proxy
-  
   configuration:
-    ingress:
-      external: true
-      targetPort: 4443
     activeRevisionsMode: Single
+    ingress:
+      allowInsecure: true
+      external: true
+      fqdn: tesla-vehicle-command-proxy.thankfulbeach-c88dd10d.koreacentral.azurecontainerapps.io
+      customDomains:
+        - bindingType: SniEnabled
+          certificateId: /subscriptions/9512a4c6-e4a6-49ba-b487-78831b7f114a/resourceGroups/testResourceGroup/providers/Microsoft.App/managedEnvironments/drevContainerAppEnvrionment/managedCertificates/daelev.store-testreso-241212174845
+          name: daelev.store
+      targetPort: 80
+      traffic:
+        - latestRevision: true
+          weight: 100
+    secrets:
+      - name: tesla-key
+
   template:
     containers:
-      - name: drev-tesla-proxy
-        image: tesla/vehicle-command:latest
-        command:
-          - /bin/sh
-          - -c
-          - |
-            echo "Listing /config directory:"
-            ls -la /config
-            echo "Starting application..."
-            exec vehicle-command --start-proxy
+      - name: tesla-vehicle-command-proxy
+        image: mytestacr0613.azurecr.io/tesla-vehicle-command-proxy:latest
         env:
-          - name: TESLA_HTTP_PROXY_TLS_CERT
-            value: "/config/cert.pem"
-          - name: TESLA_HTTP_PROXY_TLS_KEY
-            value: "/config/key.pem"
           - name: TESLA_HTTP_PROXY_HOST
-            value: "0.0.0.0"
+            value: 0.0.0.0
           - name: TESLA_HTTP_PROXY_PORT
-            value: "4443"
+            value: 80
           - name: TESLA_HTTP_PROXY_TIMEOUT
-            value: "10s"
+            value: 10s
           - name: TESLA_KEY_FILE
-            value: "/config/private_key.pem"
+            value: /config/tesla-key
           - name: TESLA_VERBOSE
             value: "true"
+        resources:
+          cpu: 2
+          memory: 4Gi
         volumeMounts:
-          - volumeName: config-volume
+          - volumeName: secret-volume
             mountPath: /config
-    registries:
-      - server: mytestacr0613.azurecr.io
-        username: "${{ secrets.ACR_USERNAME }}"
-        passwordSecretRef: mytestacr0613azurecrio-mytestacr0613
-    scale:
-      minReplicas: 1
-      maxReplicas: 3
+            readOnly: true
     volumes:
-      - name: config-volume
-        secret:
-          private_key.pem: tesla-key-file
-          cert.pem: tesla-http-proxy-tls-cert
-          key.pem: tesla-http-proxy-tls-key
+      - name: secret-volume
+        storageType: Secret

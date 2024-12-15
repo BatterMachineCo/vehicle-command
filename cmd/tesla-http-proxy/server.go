@@ -4,7 +4,6 @@ import (
 	"crypto/ecdsa"
 	"crypto/elliptic"
 	"crypto/rand"
-	"crypto/tls"
 	"crypto/x509"
 	"crypto/x509/pkix"
 	"encoding/pem"
@@ -48,23 +47,10 @@ func selfSignedCertificate() (certPEM []byte, keyPEM []byte, err error) {
 	return
 }
 
-func NewServer(addr string) (*http.Server, string) {
-	// The panic() statements below should only trigger on RNG failure
-	certPEM, keyPEM, err := selfSignedCertificate()
-	if err != nil {
-		panic(err)
-	}
-	cert, err := tls.X509KeyPair(certPEM, keyPEM)
-	if err != nil {
-		panic(err)
-	}
-	server := http.Server{
+func NewServer(addr string) *http.Server {
+
+	server := &http.Server{
 		Addr: addr,
-		TLSConfig: &tls.Config{
-			Certificates: []tls.Certificate{cert},
-			RootCAs:      x509.NewCertPool(),
-		},
 	}
-	server.TLSConfig.RootCAs.AppendCertsFromPEM(certPEM)
-	return &server, string(certPEM)
+	return server
 }
