@@ -23,4 +23,4 @@ jobs:
           appSourcePath: ${{ github.workspace }}
           acrName: mytestacr0613
           containerAppName: tesla-vehicle-command-proxy
-          resourceGroup: testResoureGroup
+          resourceGroup: testResourceGroup
