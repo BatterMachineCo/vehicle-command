@@ -99,6 +99,7 @@ func main() {
 	log.Debug("Creating proxy")
 	p, err := proxy.New(context.Background(), skey, cacheSize)
 	if err != nil {
+		log.Error("Error initializing proxy service: %v", err)
 		return
 	}
 	p.Timeout = httpConfig.timeout
