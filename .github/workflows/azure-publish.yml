@@ -1,26 +1,26 @@
-name: CI/CD Pipeline
+# name: CI/CD Pipeline
 
-on:
-  push:
-    branches:
-      - main
+# on:
+#   push:
+#     branches:
+#       - main
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v3
+#     steps:
+#       - uses: actions/checkout@v3
 
-      - name: Log in to Azure
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.DEV_ACR_AZURE_CREDENTIALS }}
+#       - name: Log in to Azure
+#         uses: azure/login@v1
+#         with:
+#           creds: ${{ secrets.DEV_ACR_AZURE_CREDENTIALS }}
 
-      - name: Build and deploy Container App
-        uses: azure/container-apps-deploy-action@v1
-        with:
-          appSourcePath: ${{ github.workspace }}
-          acrName: mytestacr0613
-          containerAppName: tesla-vehicle-command-proxy
-          resourceGroup: testResourceGroup
+#       - name: Build and deploy Container App
+#         uses: azure/container-apps-deploy-action@v1
+#         with:
+#           appSourcePath: ${{ github.workspace }}
+#           acrName: mytestacr0613
+#           containerAppName: tesla-vehicle-command-proxy
+#           resourceGroup: testResourceGroup

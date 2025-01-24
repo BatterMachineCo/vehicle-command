@@ -79,7 +79,11 @@ func main() {
 	flag.Usage = Usage
 	config.RegisterCommandLineFlags()
 	flag.Parse()
-	readFromEnvironment()
+	err = readFromEnvironment()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error reading environment: %s\n", err)
+		os.Exit(1)
+	}
 	config.ReadFromEnvironment()
 
 	if httpConfig.verbose {
