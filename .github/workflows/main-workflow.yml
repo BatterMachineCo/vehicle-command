@@ -21,7 +21,7 @@ jobs:
         run: |
           docker build -t ${{ vars.AZURE_CONTAINER_REGISTRY }}.azurecr.io/tesla-vehicle-command-proxy:${{ github.sha }} .
 
-       - name: Login to Azure Container Registry
+      - name: Login to Azure Container Registry
         uses: azure/docker-login@v1
         with:
           login-server: ${{ vars.AZURE_CONTAINER_REGISTRY }}.azurecr.io
