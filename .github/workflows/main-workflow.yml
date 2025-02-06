@@ -3,7 +3,7 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - test
+      - main
 
 jobs:
   deploy:
@@ -15,14 +15,14 @@ jobs:
       - name: Azure Login
         uses: azure/login@v2.2.0
         with:
-          creds: ${{ secrets.DEV_ACR_AZURE_CREDENTIALS }}
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Deploy to Container Apps
         uses: azure/container-apps-deploy-action@v2
         with:
           azureCredentials: ${{ secrets.DEV_ACR_AZURE_CREDENTIALS }}
           resourceGroup: ${{ vars.AZURE_RESOURCE_GROUP }}
-          containerAppName: test-tesla-vehicle-command-proxy
+          containerAppName: tesla-vehicle-command-proxy
           imageToDeploy: ${{ vars.AZURE_CONTAINER_REGISTRY }}.azurecr.io/tesla-vehicle-command-proxy:${{ github.sha }}
           environmentVariables: >
             TESLA_HTTP_PROXY_HOST=0.0.0.0
@@ -43,4 +43,4 @@ jobs:
                 "mountPath": "/config",
                 "volumeName": "secret-volume"
               }
-            ]
+          
