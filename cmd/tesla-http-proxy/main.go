@@ -32,7 +32,7 @@ Do not listen on a network interface without adding client authentication. Unaut
 be used to create excessive traffic from your IP address to Tesla's servers, which Tesla may respond
 to by rate limiting or blocking your connections.`
 
-type HttpProxyConfig struct {
+type HTTPProxyConfig struct {
 	verbose bool
 	host    string
 	port    int
@@ -40,7 +40,7 @@ type HttpProxyConfig struct {
 }
 
 var (
-	httpConfig = &HttpProxyConfig{}
+	httpConfig = &HTTPProxyConfig{}
 )
 
 func init() {
