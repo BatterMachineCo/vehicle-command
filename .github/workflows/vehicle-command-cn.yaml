@@ -47,7 +47,7 @@ env:
   DEPLOYMENT_MANIFEST_PATH: ./manifests/china
   DOCKER_FILE: ./Dockerfile
   BUILD_CONTEXT_PATH: ./
-  NAMESPACE: drev-api-china
+  NAMESPACE: drev-china
   ENABLENAMESPACECREATION: false
   AUTH_TYPE: SERVICE_PRINCIPAL
 
