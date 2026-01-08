@@ -38,11 +38,11 @@ on:
   workflow_dispatch:
 
 env:
-  ACR_RESOURCE_GROUP: drev-kube-kr
-  AZURE_CONTAINER_REGISTRY: drevkubeacr
+  ACR_RESOURCE_GROUP: drev-acr
+  AZURE_CONTAINER_REGISTRY: drevacr
   CONTAINER_NAME: vehicle-command-proxy
-  CLUSTER_NAME: drev-kube-kr
-  CLUSTER_RESOURCE_GROUP: drev-kube-kr
+  CLUSTER_NAME: drev-kube
+  CLUSTER_RESOURCE_GROUP: drev-kube
   CLUSTER_RESOURCE_TYPE: Microsoft.ContainerService/managedClusters
   DEPLOYMENT_MANIFEST_PATH: ./manifests/china
   DOCKER_FILE: ./Dockerfile
