@@ -33,8 +33,6 @@
 name: vehicle-command-test
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 env:
