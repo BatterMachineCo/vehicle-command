@@ -33,8 +33,6 @@
 name: vehicle-command-china
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 env:
